@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Icon, Modal } from 'antd';
+import { Row, Col, Icon, Modal, Form, Input } from 'antd';
 import './index.scss';
 import "antd/dist/antd.css";
 
@@ -8,14 +8,17 @@ const startTime = 8;
 const endTime = 20;
 const roomNames = ["Captain America", "Hulk", "Iron Man", "Black Widow", "Hawkeye"];
 const isBooked = [];
+const initialState = {
+
+    clickedCell: -1,
+    lastHover: 0,
+    maxCheck: 12,
+}
 class Dashboard extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            clickedCell: -1,
-            lastHover: 0
-        }
+        this.state = initialState;
         for (let i = 0; i < 100; i++) {
             let temp = parseInt(Math.random() * 10);
             isBooked.push(temp < 4);
@@ -64,20 +67,21 @@ class Dashboard extends Component {
         let clickedRow = parseInt(this.state.clickedCell / (noOfRooms + 1));
 
         if (this.state.clickedCell !== -1) {
-            if(rowNo <= this.state.maxCheck && colNo === clickedColumn){
+            if (rowNo <= this.state.maxCheck && colNo === clickedColumn) {
+                this.setState({ visibleRoom: true });
                 alert("available")
             }
-            else{
+            else {
                 alert("not available");
-                colNo = this.state.lastHover % (noOfRooms + 1);
-                let lastCell = parseInt(this.state.lastHover / (noOfRooms + 1));
-                for (let i = clickedRow; i <= lastCell; i++) {
-                    let cell = i * (noOfRooms + 1) + colNo;
-                    console.log("nonhover", cell)
-                    document.getElementById(cell).style.backgroundColor = "white";
-                }
             }
-            this.setState({clickedCell: -1});
+            colNo = this.state.lastHover % (noOfRooms + 1);
+            let lastCell = parseInt(this.state.lastHover / (noOfRooms + 1));
+            for (let i = clickedRow; i <= lastCell; i++) {
+                let cell = i * (noOfRooms + 1) + colNo;
+                console.log("nonhover", cell)
+                document.getElementById(cell).style.backgroundColor = "white";
+            }
+            this.setState(initialState);
             return;
         }
         colNo = id % (noOfRooms + 1);
@@ -149,14 +153,53 @@ class Dashboard extends Component {
         return rowComponent;
     }
 
+    handleCancelBookRoom = () => {
+        this.setState({
+            clickedCell: -1,
+            lastHover: 0,
+            maxCheck: 12,
+            visibleRoom: false
+        });
+    }
+
+    handleBookRoom = () => {
+
+    }
+    bookRoomModal = () => {
+        return <Modal
+            title="Add new room"
+            visible={this.state.visibleRoom}
+            onOk={this.handleBookRoom}
+            onCancel={this.handleCancelBookRoom}
+        >
+            <Form>
+                <Form.Item>
+                    <Input
+                        placeholder="Room Name"
+                        onChange={this.setRoomName}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Input
+                        placeholder="Size"
+                        onChange={this.setRoomSize}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Input
+                        placeholder="Size"
+                        onChange={this.setRoomSize}
+                    />
+                </Form.Item>
+            </Form>
+        </Modal>
+    }
     render() {
         return (
             <div className="dashboard">
                 <p className="dashboard__heading">Dashboard</p>
                 {this.renderTabs()}
-                <Modal>
-
-                </Modal>
+                {this.bookRoomModal()}
             </div>
         )
     }
