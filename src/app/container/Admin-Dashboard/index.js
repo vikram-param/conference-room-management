@@ -220,7 +220,6 @@ class AdminDashboard extends Component {
         let cards = [];
 
         for (let i = 0; i < this.state.rooms.length; i++) {
-            console.log(this.state.rooms[i])
             cards.push(
                 <Col className="gutter-row" xl={8} lg={8} md={12} sm={12} xs={12} >
                     <div>
@@ -268,7 +267,9 @@ class AdminDashboard extends Component {
                     {this.addRoomModal()}
                     {this.addUserModal()}
                 </div>
+                <div style={{width: "60%", margin: "0 auto"}}>
                 {this.renderCards()}
+                </div>
             </div>
         )
     }

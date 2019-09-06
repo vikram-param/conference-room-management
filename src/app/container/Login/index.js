@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import './index.scss';
 import { withRouter } from 'react-router';
+import * as postUtils from '../../utils/post';
 
 class NormalLoginForm extends React.Component {
   handleSubmit = e => {
@@ -9,6 +10,18 @@ class NormalLoginForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        postUtils.logIn(values.username, values.password).then(data => {
+          console.log(data);
+          if(data["status-code"] === 200) {
+            this.props.history.push("/dashboard");
+            alert("Successful");
+          }
+        }).catch(err => {
+          console.log(err);
+          this.setState({
+            showInvalidUser: true
+          })
+        })
       }
     });
   };

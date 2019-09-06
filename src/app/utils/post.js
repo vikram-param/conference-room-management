@@ -71,3 +71,22 @@ export function createRoom(roomName, utils, size) {
     })
 
 }
+
+export function logIn(email, password) {
+    let url = "http://192.168.0.185:8080/api/v1/webApi/login";
+    let data = {
+        "email": email,
+        "password": password
+    }
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        return response.json()
+    }).catch(err => {
+        Promise.reject(err);
+    });
+}
