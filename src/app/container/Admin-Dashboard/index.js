@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Row, Col, Modal, Button, Form, Input, Icon, Select } from 'antd';
+import { Row, Col, Modal, Button, Form, Input, Icon, Select, Card } from 'antd';
 import * as postUtils from '../../utils/post';
+import * as getUtils from '../../utils/get';
 import './index.scss';
 
 class AdminDashboard extends Component {
@@ -14,15 +15,19 @@ class AdminDashboard extends Component {
             roomId: '',
             roomName: '',
             utils: [],
-            size: 0,
+            roomSize: 0,
             userEmail: '',
             userId: '',
-            role: "0"
+            role: "0",
+            rooms: []
         }
     }
 
-    componentWillMount() {
-
+    async componentWillMount() {
+        let data = await getUtils.getRooms();
+        this.setState({
+            rooms: data.content
+        })
     }
 
     addRoom = () => {
@@ -50,10 +55,12 @@ class AdminDashboard extends Component {
     handleOkUser = () => {
         this.setState({
             visibleUser: false
-        },() => {
+        }, () => {
             postUtils.createUser(this.state.userId, this.state.userName, this.state.userPassword, this.state.userEmail, this.state.role).then((response => {
                 console.log(response);
-            }))
+            })).catch(err => {
+                console.log(err);
+            })
         })
     }
 
@@ -63,20 +70,20 @@ class AdminDashboard extends Component {
             roomId: '',
             roomName: '',
             utils: [],
-            size: 0
+            roomSize: 0
         })
     }
 
     handleOkRoom = () => {
         this.setState({
             visibleRoom: false
+        }, () => {
+            postUtils.createRoom(this.state.roomName, this.state.utils, this.state.roomSize).then(response => {
+                console.log(response);
+            }).catch(err => {
+                console.log(err);
+            })
         });
-    }
-
-    setRoomId = (e) => {
-        this.setState({
-            roomId: e.target.value
-        })
     }
 
     setRoomName = (e) => {
@@ -105,12 +112,6 @@ class AdminDashboard extends Component {
             onCancel={this.handleCancelRoom}
         >
             <Form>
-                <Form.Item>
-                    <Input
-                        placeholder="Room Id"
-                        onChange={this.setRoomId}
-                    />
-                </Form.Item>
                 <Form.Item>
                     <Input
                         placeholder="Room Name"
@@ -156,19 +157,13 @@ class AdminDashboard extends Component {
 
     setuserId = (e) => {
         this.setState({
-            setuserId: e.target.value
+            userId: e.target.value
         })
     }
 
     setUserEmail = (e) => {
         this.setState({
             userEmail: e.target.value
-        })
-    }
-
-    setUseruserId = (e) => {
-        this.setState({
-            userId: e.target.value
         })
     }
 
@@ -184,7 +179,7 @@ class AdminDashboard extends Component {
                     <Input
                         prefix={<Icon type="idcard" style={{ color: 'rgba(0,0,0,.25)' }} />}
                         placeholder="Employee Id"
-                        onChange={this.setUseruserId}
+                        onChange={this.setuserId}
                     />
                 </Form.Item>
                 <Form.Item>
@@ -220,6 +215,37 @@ class AdminDashboard extends Component {
         </Modal>
     }
 
+    renderCards = () => {
+        // debugger
+        let cards = [];
+
+        for (let i = 0; i < this.state.rooms.length; i++) {
+            console.log(this.state.rooms[i])
+            cards.push(
+                <Col className="gutter-row" xl={8} lg={8} md={12} sm={12} xs={12} >
+                    <div>
+                        <div className="dcard">
+                            <center>
+                                <Card title={this.state.rooms[i].roomName} bordered={false} style={{ width: 300, margin: 10, boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+                                    {this.state.rooms[i].utilityWater ? "Water Available" : null}
+                                    <br />
+                                    {this.state.rooms[i].utilityWBoard ? "White Board Available" : null}
+                                    <br />
+                                    {this.state.rooms[i].utilityAC ? "AC Available" : null}
+                                    <br />
+                                    {this.state.rooms[i].utilityProjector ? "Projector Available" : null}
+                                    <br />
+                                    {this.state.rooms[i].utilitySmTv ? "Smart Available" : null}
+                                    <br />
+                                </Card>
+                            </center>
+                        </div>
+                    </div>
+                </Col>)
+        }
+        return cards;
+    }
+
     render() {
         return (
             <div className="mainPage">
@@ -242,6 +268,7 @@ class AdminDashboard extends Component {
                     {this.addRoomModal()}
                     {this.addUserModal()}
                 </div>
+                {this.renderCards()}
             </div>
         )
     }
