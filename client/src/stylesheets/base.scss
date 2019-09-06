@@ -1,0 +1,62 @@
+// SAMPLE FILE - PLEASE MODIFY ACCORDING TO YOUR PROJECT
+
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    outline: none;
+}
+
+html {
+    font-size: 62.5%; // 1 rem = 10px; 10px/16px = 62.5%
+}
+
+body {
+    background-color: #fafbfc !important;
+    font-size: $font-size-default !important;
+    // font-family: $font-name-ptsans !important;
+}
+
+// @media all and (min-width: 600px) {
+//     html {
+//         font-size: 125%; // 1 rem = 20px; 20px/16px = 75%
+//     }
+// }
+
+@media all and (min-width: 1000px) {
+    html {
+        font-size: 62.5%; // 1 rem = 10px; 10px/16px = 156%
+        // font-size: 156%; // 1 rem = 25px; 25px/16px = 156%
+    }
+}
+
+@media all and (min-width: 1920px) {
+    html {
+        font-size: 75%; // 1 rem = 12px; 12px/16px = 75%
+    }
+}
+
+@media all and (min-width: 1440px) {
+    html {
+        font-size: 68.75%; // 1 rem = 11px; 11px/16px = 68.75%
+    }
+}
+
+@media all and (max-width: 1024px) {
+    html {
+        font-size: 56.25%; // 1 rem = 9px; 9px/16px = 56.25%
+    }
+}
+
+@media all and (max-width: 480px) {
+    html {
+        font-size: 50%; // 1 rem = 8px; 8px/16px = 50%
+    }
+}
+
+@media all and (max-width: 320px) {
+    html {
+        font-size: 37.5%; // 1 rem = 6px; 6px/16px = 37.5%
+    }
+}

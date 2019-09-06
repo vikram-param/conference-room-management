@@ -1,0 +1,36 @@
+// SAMPLE FILE - PLEASE MODIFY ACCORDING TO YOUR PROJECT
+
+@mixin absCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin verticalCenter {
+    position: absolute;
+    top: 50%;
+    transform: translate(0%, -50%);
+} 
+
+// @mixin card {
+//     border-radius: 8rem;
+//     background-color: #ffffff;
+//     -moz-box-shadow: 0rem 5rem 10rem 0 rgba(0, 0, 0, 0.1);
+//    -webkit-box-shadow: 0rem 5rem 10rem 0 rgba(0, 0, 0, 0.1);
+//     box-shadow: 0rem 5rem 10rem 0 rgba(0, 0, 0, 0.1);
+// }
+
+@mixin button {
+    width: 15rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    background-color: $color-blue-primary;
+    border:none;
+    font-family: $font-name-ptsans-bold;
+    font-size: $font-size-default;
+    text-transform: uppercase;
+    &:hover{
+        background-color: $color-blue-primary;
+    }
+}
