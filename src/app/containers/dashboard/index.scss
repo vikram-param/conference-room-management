@@ -1,0 +1,36 @@
+@import '../../../stylesheets/mixins.scss';
+
+.dashboard{
+
+    margin: auto 200px;
+
+    &__heading{
+        font-size: 80px;
+        margin: 10px auto;
+        text-align: center;
+    }
+    &__timeCell{
+        height: 50px;
+        line-height: 50px;
+        width: 150px;
+        border-right: 1px solid gray;
+        &__displayIcon{
+            margin-bottom: 0 !important;
+            color: gray;
+        }
+        &__booked:hover{
+            background-color: red;
+            opacity: 0.5;
+            :first-child{
+                color: white;
+            }
+        }
+        &__open:hover{
+            background-color: green;
+            opacity: 0.5;
+            :first-child{
+                color: white;
+            }
+        }
+    }
+}

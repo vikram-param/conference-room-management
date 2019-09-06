@@ -3,6 +3,7 @@ import { Row, Col, Modal, Button, Form, Input, Icon, Select, Card } from 'antd';
 import * as postUtils from '../../utils/post';
 import * as getUtils from '../../utils/get';
 import './index.scss';
+const { Option } = Select;
 
 class AdminDashboard extends Component {
     constructor(props) {
