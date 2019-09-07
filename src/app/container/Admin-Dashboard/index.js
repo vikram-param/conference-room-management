@@ -8,6 +8,9 @@ const { Option } = Select;
 class AdminDashboard extends Component {
     constructor(props) {
         super(props);
+        if (parseInt(localStorage.getItem("role")) != 0) {
+            this.props.history.push('/dashboard');
+        }
         this.state = {
             visibleRoom: false,
             visibleUser: false,
@@ -207,6 +210,7 @@ class AdminDashboard extends Component {
                 </Form.Item>
                 <Form.Item>
                     <Select onChange={this.roleChange} placeholder="Role">
+                        <Option value={0}>Super User</Option>
                         <Option value={1}>Project Manager</Option>
                         <Option value={2}>Management</Option>
                         <Option value={3}>Employee</Option>
@@ -268,8 +272,8 @@ class AdminDashboard extends Component {
                     {this.addRoomModal()}
                     {this.addUserModal()}
                 </div>
-                <div style={{width: "60%", margin: "0 auto"}}>
-                {this.renderCards()}
+                <div style={{ width: "60%", margin: "0 auto" }}>
+                    {this.renderCards()}
                 </div>
             </div>
         )

@@ -1,10 +1,17 @@
 import React from 'react';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, Alert } from 'antd';
 import './index.scss';
 import { withRouter } from 'react-router';
 import * as postUtils from '../../utils/post';
 
 class NormalLoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showInvalidUser: false
+    }
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -12,9 +19,19 @@ class NormalLoginForm extends React.Component {
         console.log('Received values of form: ', values);
         postUtils.logIn(values.username, values.password).then(data => {
           console.log(data);
-          if(data["status-code"] === 200) {
+          if (data["status-code"] === 200) {
+            localStorage.setItem("userId", data.content.userId);
+            localStorage.setItem("role", data.content.role);
+            if(data.content.role === 0) {
+              this.props.history.push('/admin');
+              return;
+            }
             this.props.history.push("/dashboard");
-            alert("Successful");
+          }
+          if (data["status-code"] == 401) {
+            this.setState({
+              showInvalidUser: true
+            })
           }
         }).catch(err => {
           console.log(err);
@@ -30,6 +47,7 @@ class NormalLoginForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="login-form">
+        {this.state.showInvalidUser ? <Alert message="Invalid user name or password" type="error" /> : null}
         <Form onSubmit={this.handleSubmit}>
           <Form.Item>
             {getFieldDecorator('username', {
@@ -63,7 +81,6 @@ class NormalLoginForm extends React.Component {
             <Button type="primary" htmlType="submit" className="login-form-button" style={{ width: "100" }}>
               Log in
           </Button>
-            Or <a href="">register now!</a>
           </Form.Item>
         </Form>
       </div>

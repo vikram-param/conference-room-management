@@ -1,0 +1,16 @@
+@import '../../stylesheets/mixins.scss';
+.uiContainer{
+   display: flex;
+   height: 100vh;
+   flex-direction: row;
+}
+.mainLayout{
+   // height: 100vh;
+   // min-height: 600px;
+   display: flex;
+   flex-direction: row;
+   overflow-y: auto;
+}
+Loader{
+   @include absCenter;
+}
