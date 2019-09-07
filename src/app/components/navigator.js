@@ -43,11 +43,15 @@ class Navigator extends React.Component {
                     <Icon type="dashboard" />
                     Dashboard
                 </Menu.Item>
-                {this.props.isAdmin ? <Menu.Item key="2" onClick={this.adminDashboard}>
+                <Menu.Item key="2" onClick={this.dashboard}>
+                    <Icon type="dashboard" />
+                    Dashboard
+                </Menu.Item>
+                {this.props.isAdmin ? <Menu.Item key="3" onClick={this.adminDashboard}>
                     <Icon type="user" />
                     Admin Dashboard
                 </Menu.Item> : null}
-                <Menu.Item key="3" onClick={this.logOut}>
+                <Menu.Item key="4" onClick={this.logOut}>
                     <Icon type="setting" />
                     Log Out
                 </Menu.Item>
