@@ -27,8 +27,13 @@ class Navigator extends React.Component {
         this.props.history.push('/admin')
     }
 
+    myBookings = () => {
+        this.props.history.push('/bookings')
+    }
+
     dashboard = () => {
-        this.props.history.push('/dashboard')
+        this.props.history.push('/book')
+
     }
 
     render() {
@@ -41,11 +46,11 @@ class Navigator extends React.Component {
             >
                 <Menu.Item key="1" onClick={this.dashboard}>
                     <Icon type="dashboard" />
-                    Dashboard
+                    Book Room
                 </Menu.Item>
-                <Menu.Item key="2" onClick={this.dashboard}>
-                    <Icon type="dashboard" />
-                    Dashboard
+                <Menu.Item key="2" onClick={this.myBookings}>
+                    <Icon type="book" />
+                    My Bookings
                 </Menu.Item>
                 {this.props.isAdmin ? <Menu.Item key="3" onClick={this.adminDashboard}>
                     <Icon type="user" />

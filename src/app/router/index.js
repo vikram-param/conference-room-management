@@ -8,6 +8,7 @@ import AdminDashboard from '../container/Admin-Dashboard';
 import Navigator from '../components/navigator';
 import 'antd/dist/antd.css';
 import './index.scss'
+import MyBookings from '../container/My-Bookings';
 
 const { Header, Content, Footer, Sider } = Layout;
 class Router extends React.Component {
@@ -19,7 +20,9 @@ class Router extends React.Component {
 		}
 	}
 	componentDidMount() {
-
+		if (localStorage.getItem('role') === undefined || localStorage.getItem('role') === null || localStorage.getItem('userId') === null || localStorage.getItem('userId') === undefined) {
+			this.props.history.push('/login');
+		}
 	}
 	componentWillReceiveProps() {
 
@@ -37,7 +40,7 @@ class Router extends React.Component {
 	}
 
 	isAdmin = () => {
-		if(parseInt(localStorage.getItem("role")) === 0) {
+		if (parseInt(localStorage.getItem("role")) === 0) {
 			return true;
 		}
 		return false;
@@ -48,11 +51,12 @@ class Router extends React.Component {
 			<Layout className="uiContainer">
 				<Layout className="mainLayout">
 					{this.isLoginPage() ? null : <Navigator isAdmin={this.isAdmin()} />}
-					<Content style={{ overflow: 'initial' }}>
+					<Content style={{ overflow: 'initial', marginLeft: "256px" }}>
 						<Switch>
-							<Route path='/dashboard' component={Dashboard} />
+							<Route path='/book' component={Dashboard} />
 							<Route path='/login' component={Login} />
 							<Route path='/admin' component={AdminDashboard} />
+							<Route path='/bookings' component={MyBookings} />
 						</Switch >
 					</Content>
 				</Layout>

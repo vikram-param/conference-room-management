@@ -11,7 +11,7 @@ export function createUser(userId, userName, password, email, role) {
     }
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(userData), // data can be `string` or {object}!
+        body: JSON.stringify(userData), 
         headers: {
             'Content-Type': 'application/json'
         }
@@ -60,7 +60,7 @@ export function createRoom(roomName, utils, size) {
     }
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(roomData), // data can be `string` or {object}!
+        body: JSON.stringify(roomData),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -80,7 +80,58 @@ export function logIn(email, password) {
     }
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(data), // data can be `string` or {object}!
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        return response.json()
+    }).catch(err => {
+        Promise.reject(err);
+    });
+}
+
+
+export function bookRoom(data) {
+    let url = `http://192.168.0.185:8080/api/v1/webApi/bookRoom`;
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        return response.json()
+    }).catch(err => {
+        Promise.reject(err);
+    });
+}
+
+export function submitMom(data) {
+    let url = `http://192.168.0.185:8080/api/v1/webApi/addMoM`;
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        return response.json()
+    }).catch(err => {
+        Promise.reject(err);
+    });
+}
+
+export function addParticipants(userId, bookingId, participant) {
+    let data = {
+        "userId": userId,
+        "bookingId": bookingId,
+        "participant": participant
+    }
+    let url = `http://192.168.0.185:8080/api/v1/webApi/addParticpants`;
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data), 
         headers: {
             'Content-Type': 'application/json'
         }

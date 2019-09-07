@@ -252,11 +252,15 @@ class AdminDashboard extends Component {
 
     render() {
         return (
-            <div className="mainPage">
+            <div className="mainPage" style={{marginTop: "100px"}}>
+                <div style={{ width: "60%", margin: "0 auto" }}>
+                <center><h1 className="welcome" style={{fontSize: "80px"}}>Welcome</h1></center>
+                    {this.renderCards()}
+                </div>
                 <div style={{ textAlign: 'center' }}>
                     <Row className="welcomePage" gutter={24}>
                         <Col span={24} align="middle">
-                            <h1 className="welcome">Welcome</h1>
+                            <h1 className="welcome"></h1>
                         </Col>
                         <Col xl={12} lg={12} sm={24} md={12} xs={24} align="middle">
                             <div className="portfolioBox">
@@ -271,9 +275,6 @@ class AdminDashboard extends Component {
                     </Row>
                     {this.addRoomModal()}
                     {this.addUserModal()}
-                </div>
-                <div style={{ width: "60%", margin: "0 auto" }}>
-                    {this.renderCards()}
                 </div>
             </div>
         )
