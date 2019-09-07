@@ -23,6 +23,9 @@ class Router extends React.Component {
 		if (localStorage.getItem('role') === undefined || localStorage.getItem('role') === null || localStorage.getItem('userId') === null || localStorage.getItem('userId') === undefined) {
 			this.props.history.push('/login');
 		}
+		else{
+			this.props.history.push('/book')
+		}
 	}
 	componentWillReceiveProps() {
 

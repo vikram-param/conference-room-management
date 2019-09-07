@@ -40,6 +40,7 @@ class Dashboard extends Component {
     }
 
     async componentDidMount() {
+        console.log("lsddf", this.daysOfYear[0]);
         this.setState({ formatDate: this.daysOfYear[0], showLoader: true });
         let roomContents = await getUtils.getRooms();
         this.filterOnDate();
@@ -54,12 +55,10 @@ class Dashboard extends Component {
         isBooked = new Array(100).fill(false);
         let self = localStorage.getItem('userId');
         let allBookings = await getUtils.getBookingsByUser(self), startBookTime, endBookTime, colNo, rowNo, cell;
-        console.log(allBookings)
         allBookings = allBookings.content;
         for (let i = 0; i < allBookings.length; i++) {
             let foundDate = allBookings[i].startTime.split('T')[0].substr(-5);
             foundDate = months[parseInt(foundDate.split('-')[0]) - 1] + " " + foundDate.split('-')[1];
-            console.log(foundDate, this.state.formatDate)
             // startBookTime = ""+this.getMonth(startBookTime[1])+ " " +startBookTime[2];
             if (this.state.formatDate.includes(foundDate) && allBookings[i].historyState === 0) {
 
@@ -73,7 +72,6 @@ class Dashboard extends Component {
                     cell = (rowNo + k) * noOfRooms + colNo;
                     if (cell > 0)
                         isBooked[cell] = true;
-                    console.log(cell)
                 }
             }
             this.setState({ showLoader: false });
@@ -82,7 +80,6 @@ class Dashboard extends Component {
     }
 
     changeDate = (value) => {
-        console.log(value);
         this.setState({ formatDate: value, showLoader: true },()=>{
             this.filterOnDate();
         });
@@ -121,7 +118,7 @@ class Dashboard extends Component {
         for (let i = clickedRow; i <= lastCell; i++) {
             let cell = i * (noOfRooms) + colNo;
             // console.log("nonhover", cell)
-            document.getElementById(cell).style.backgroundColor = "white";
+            document.getElementById(cell).style.backgroundColor = "";
         }
         colNo = id % (noOfRooms);
         if (colNo === clickedColumn && rowNo > clickedRow) {
@@ -152,7 +149,6 @@ class Dashboard extends Component {
         if (this.state.clickedCell !== -1) {
             if (rowNo <= this.state.maxCheck && colNo === clickedColumn) {
                 this.setState({ visibleRoom: true, secondClickedCell: e.target.id, firstClickedCell: this.state.clickedCell });
-                console.log(this.state.clickedCell, e.target.id);
             }
             else {
                 message.error("Not available");
@@ -195,6 +191,7 @@ class Dashboard extends Component {
 
                 if (i + j === 0) {
                     displayIcon = <Select onChange={this.changeDate} defaultValue={this.state.formatDate} style={{ width: 240 }}>{this.renderOptions()}</Select>
+                    customStyle.backgroundColor = "#abcaaa"
                 }
                 else {
                     if (j === 0) {
@@ -253,7 +250,6 @@ class Dashboard extends Component {
 
     getMonth=(month)=>{
         for(let i = 0; i < 12; i++){
-            console.log(month, months[i]);
             if(months[i] === month){
                 return i+1;
             }
@@ -262,46 +258,44 @@ class Dashboard extends Component {
     }
 
     handleBookRoom = () => {
-        let bookingStart = this.state.firstClickedCell;
-        let bookingEnd = this.state.secondClickedCell;
-        let self = localStorage.getItem("userId")
-
-        let today = this.state.formatDate;
-        console.log(today)
-        today = today.split(' ');
-        let roomNo = ((bookingStart) % noOfRooms)+1;
-        bookingStart = startTime + parseInt(bookingStart / noOfRooms) + 1;
-        bookingEnd = startTime + parseInt(bookingEnd / noOfRooms) + 1;
-        let startBookingTime = today[3] + "-" + this.getMonth(today[1]) + "-" + today[2] + " " + this.format(bookingStart) + ":00:00.000000";
-        let endBookingTime = today[3] + "-" + this.getMonth(today[1]) + "-" + today[2] + " " + this.format(bookingEnd) + ":00:00.000000";
-        let postData = {
-            startTime: startBookingTime,
-            endTime: endBookingTime,
-            roomId: roomNo,
-            userId: self,
-            agenda: this.state.agendaText,
-            historyState:0,
-            bookingDate: todayDate
-
-        }
-        
-        console.log(postData);
-        getUtils.userAuthorizedForBooking(self).then(res=>{
-            if(res["status-code"] === 200){
-                postUtils.bookRoom(postData).then(()=>{
-                    this.filterOnDate();
-                    this.setState({visibleRoom: false});
-                }).catch(()=>{
-                    this.setState({visibleRoom: false});
-                })
+        this.setState({visibleRoom: false, showLoader: true},()=>{
+            let bookingStart = this.state.firstClickedCell;
+            let bookingEnd = this.state.secondClickedCell;
+            let self = localStorage.getItem("userId")
+    
+            let today = this.state.formatDate;
+            today = today.split(' ');
+            let roomNo = ((bookingStart) % noOfRooms)+1;
+            bookingStart = startTime + parseInt(bookingStart / noOfRooms) + 1;
+            bookingEnd = startTime + parseInt(bookingEnd / noOfRooms) + 1;
+            let startBookingTime = today[3] + "-" + this.getMonth(today[1]) + "-" + today[2] + " " + this.format(bookingStart) + ":00:00.000000";
+            let endBookingTime = today[3] + "-" + this.getMonth(today[1]) + "-" + today[2] + " " + this.format(bookingEnd) + ":00:00.000000";
+            let postData = {
+                startTime: startBookingTime,
+                endTime: endBookingTime,
+                roomId: roomNo,
+                userId: self,
+                agenda: this.state.agendaText,
+                historyState:0,
+                bookingDate: todayDate
+    
             }
-            else{
-                message.error("not eligible, Reason MoM");
-                this.setState({visibleRoom: false});
-            }
+            
+            getUtils.userAuthorizedForBooking(self).then(res=>{
+                if(res["status-code"] === 200){
+                    postUtils.bookRoom(postData).then(()=>{
+                        this.filterOnDate();
+                        this.setState({showLoader: false});
+                    }).catch(()=>{
+                        this.setState({showLoader: false});
+                    })
+                }
+                else{
+                    message.error("not eligible, Reason MoM");
+                    this.setState({showLoader: false});
+                }
+            })
         })
-        
-        
     }
 
     setAgenda=(e)=>{
@@ -328,18 +322,16 @@ class Dashboard extends Component {
         return (
             <div className="dashboard">
                 <div>
-                    {this.state.showLoader ? <Icon type="load" />
-                        :
+                    {this.state.showLoader && <Icon type="load" style={{fontSize: "40px"}} />} 
                         <div>
                             <p className="dashboard__heading">Conference Room Booking Manager</p>
-                            <div>{this.renderTabs()}</div>
+                            <div className="test" style={{marginLeft: "120px"}}>{this.renderTabs()}</div>
                             {this.bookRoomModal()}
                         </div>
-                    }
                 </div>
             </div>
         )
     }
 }
 
-export default Dashboard;
+export default Dashboard; 

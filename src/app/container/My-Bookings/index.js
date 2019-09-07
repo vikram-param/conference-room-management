@@ -100,10 +100,10 @@ class MyBookings extends Component {
             projectTitle: ""
         }
         console.log(postData)
-        postUtils.submitMom(postData).then(()=>{
+        postUtils.submitMom(postData).then(() => {
             message.success("MoM added successfully")
-            this.setState({showRowDetails: false});
-        }).catch(err=>{
+            this.setState({ showRowDetails: false });
+        }).catch(err => {
             message.error("error in adding MoM");
         });
     }
@@ -124,11 +124,12 @@ class MyBookings extends Component {
         </Modal>
     }
 
-    handleRowClick = async(record, index) => {
+    handleRowClick = async (record, index) => {
         let mom = await getUtils.getMoM(record.bookingId);
+        console
         this.setState({ showRowDetails: true, nextPageData: record, haveMom: mom.content.length !== 0 });
-        if(mom.content.length !== 0){
-            this.setState({mom: mom.content[0].aboutMoM});
+        if (mom.content.length !== 0) {
+            this.setState({ mom: mom.content[0].aboutMoM, polarity: mom.content[0].polarity, sentiment: mom.content[0].sentiment });
         }
     }
 
@@ -154,9 +155,13 @@ class MyBookings extends Component {
                                         autosize={{ minRows: 10, maxRows: 15 }}
                                         style={{ marginBottom: "20px" }}
                                     /> :
-                                    <p><b>MoM:</b> {this.state.mom}</p>
+                                    <div>
+                                        <p><b>MoM:</b> {this.state.mom}</p>
+                                        <p><b>Polarity:</b> {this.state.polarity}</p>
+                                        <p><b>Sentiment:</b> {this.state.sentiment}</p>
+                                    </div>
                                 }
-                                <Button onClick={this.goBack} style={{marginRight: "20px"}}>Go Back</Button>
+                                <Button onClick={this.goBack} style={{ marginRight: "20px" }}>Go Back</Button>
                                 <Button onClick={this.submitMoM}>Submit</Button>
                             </Card>
                         </div>
